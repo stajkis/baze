@@ -1,0 +1,59 @@
+
+
+SELECT DATE_SUB(CURRENT_DATE, INTERVAL 2 DAY);    // DVA DANA UNAZAD
+
+1)
+a)	
+		SELECT u.firstname as ime_korisnika, u.lastname as prezime_korisnika
+ 		FROM User as u
+		left outer join Order as o on o.userId=u.id
+		where u.dateEdit >=DATE_SUB(CURRENT_DATE, INTERVAL 2 DAY) or u.dateCreate >=DATE_SUB(CURRENT_DATE, INTERVAL 2 DAY)
+
+		SELECT u.firstname as ime_korisnika, u.lastname as prezime_korisnika
+ 		FROM User as u
+		left outer join Order as o on o.userId=u.id
+		where o.dateEdit >=DATE_SUB(CURRENT_DATE, INTERVAL 2 DAY) or o.dateCreate >=DATE_SUB(CURRENT_DATE, INTERVAL 2 DAY)
+B) 
+		// izlistani korisnici sa svim porudzbinama i njihovim vrednostima sa id_porudzbine
+		SELECT u.firstname as ime_korisnika, u.lastname as prezime_korisnika,o.orderId as id_porudzbine, o.value as vrednost_porudzbine
+ 		FROM User as u
+		left outer join Order as o on o.userId=u.id
+		group by u.firstname, u.lastname,o.orderId
+
+		// izlistani svi korisnici koji su imali porudzbine i zbir vrenosti svake porudzbine-- ovde se ne prikazuje id_porudzbine
+		SELECT u.firstname as ime_korisnika, u.lastname as prezime_korisnika, sum(o.value) as ukupna_vrednost
+ 		FROM User as u
+		left outer join Order as o on o.userId=u.id
+		group by u.firstname, u.lastname
+
+2)
+c) 		SELECT u.firstname as ime_korisnika, u.lastname as prezime_korisnika,u.id, u.phone,count(o.orderId) as broj_porudzbina
+
+ 		FROM User as u
+		left outer join Order as o on o.userId=u.id
+		group by u.firstname , u.lastname ,u.id, u.phone
+		having count(o.orderId)>=2
+
+d)		SELECT u.firstname as ime_korisnika, u.lastname as prezime_korisnika, o.id as id_porudzbine, count(oi.id) as broj_stavki 
+ 		FROM User as u
+		left outer join Order as o on o.userId=u.id
+		left outer join OrderItem as oi on oi.orderId=o.id
+		group by  u.firstname , u.lastname , o.id
+
+e)		SELECT u.firstname as ime_korisnika, u.lastname as prezime_korisnika, o.id as id_porudzbine, count(oi.id) as broj_stavki 
+ 		FROM User as u
+		left outer join Order as o on o.userId=u.id
+		left outer join OrderItem as oi on oi.orderId=o.id
+		group by  u.firstname , u.lastname , o.id
+		having count(oi.id)>=2
+
+f)
+		SELECT u.firstname as ime_korisnika, u.lastname as prezime_korisnika, o.id as id_porudzbine, count(distinct oi.productId) as broj_proizvoda 
+ 		FROM User as u
+		left outer join Order as o on o.userId=u.id
+		left outer join OrderItem as oi on oi.orderId=o.id
+		group by  u.firstname , u.lastname , o.id
+		having count(distinct oi.productId)>=3	
+
+
+
